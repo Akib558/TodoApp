@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form #form="ngForm" (ngSubmit)="updateTodo()" class="form-container">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" class="form-control" name="title" id="title" [(ngModel)]="newTodo.title">
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <!-- Apply CSS styling to increase the height of the textarea -->
+          <textarea class="form-control description" name="description" id="description" [(ngModel)]="newTodo.description" style="height: 150px;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+  </div>
+</div>

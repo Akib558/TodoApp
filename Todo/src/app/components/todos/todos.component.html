@@ -1,36 +1,42 @@
-<!-- <form>
+<div class="container">
+  <form #form="ngForm" (ngSubmit)="addTodo()" class="form-container">
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Title</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+      <input type="text" class="form-control" name="title" id="title" [(ngModel)]="newTodo.title">
     </div>
     <div class="mb-3">
       <label for="exampleInputPassword1" class="form-label">Description</label>
-      <input type="password" class="form-control" id="exampleInputPassword1">
+      <input type="text" class="form-control" name="description" id="description" [(ngModel)]="newTodo.description">
     </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form> -->
+  <h1 class="text-center mt-4">My Notes</h1>
 
-<h1>
-    My Notes
-</h1>
-
-<table class="table">
-    <thead>
-      <tr >
-        <th scope="col">Id</th>
+  <table class="table table-striped table-bordered mt-3">
+    <thead class="table-dark">
+      <tr>
+        <!-- <th scope="col">Id</th> -->
         <th scope="col">Title</th>
         <th scope="col">Description</th>
+        <th scope="col">Actions</th> <!-- Add a new column for actions -->
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor = "let todo of todos">
-        <!-- <th scope="row">1</th> -->
-        <td>{{todo.id}}</td>
+      <tr *ngFor="let todo of todos">
+        <!-- <td>{{todo.id}}</td> -->
         <td>{{todo.title}}</td>
         <td>{{todo.description}}</td>
+        <td>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary me-1" [routerLink]="['/edit', todo.id]">Edit</button>
+            <button type="button" class="btn btn-danger" (click)="deleteTodo(todo.id)">Delete</button>
+            <!-- Add an update and delete button with click event handlers -->
+          </div>
+        </td>
       </tr>
-  
     </tbody>
   </table>
+
+
+</div>
