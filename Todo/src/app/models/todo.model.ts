@@ -8,5 +8,7 @@ export interface Todo {
   updatedTime?: string; // Optional as it is not included in the response
   completedTime: string;
   isCompleted: string;
+  labels: string;
+  mylabels: string;
 
 }

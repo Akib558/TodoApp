@@ -17,8 +17,14 @@ export class TodosComponent implements OnInit {
     createdTime: "",
     updatedTime: "",
     completedTime: "",
-    isCompleted: ""
+    isCompleted: "",
+    labels: "",
+    mylabels: ""
   };
+// selectedLabel: any;
+
+  labelarray: any[] = [];
+  mylabelarray: any[] = [];
 
   constructor(private todoService: TodoService) {}
 
@@ -30,12 +36,27 @@ export class TodosComponent implements OnInit {
     this.todoService.getAllTodos().subscribe({
       next: (todos: Todo[]) => {
         this.todos = todos;
+        console.log(todos);
+
+        // Clear the label array before populating it with new labels
+        this.labelarray = [];
+
+        // Iterate over each todo to extract labels
+        todos.forEach(todo => {
+          // Split the labels string into an array and push it into labelarray
+          this.labelarray.push(todo.labels.split(','));
+          this.mylabelarray.push(todo.mylabels.split(','));
+        });
+
+        console.log(this.labelarray);
+
       },
       error: (error) => {
         console.error('Error retrieving todos:', error);
       }
     });
   }
+
 
   addTodo() {
     if (!this.newTodo.title || !this.newTodo.description) {
@@ -54,6 +75,8 @@ export class TodosComponent implements OnInit {
           updatedTime: "",
           completedTime: "",
           isCompleted: "0",
+          labels: "",
+          mylabels: ""
         }; // Reset form
       },
       error: (error) => {
@@ -79,6 +102,7 @@ export class TodosComponent implements OnInit {
   toggleTodoCompletion(todo: Todo, isCompletedString: string) {
     // Toggle the completion status
     todo.isCompleted = isCompletedString == "0" ? "1" : "0";
+    todo.mylabels = todo.mylabels ?? "";
     console.log(todo);
 
     // Update the completion status on the server

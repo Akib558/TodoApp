@@ -20,6 +20,8 @@ export class TodoService {
       map(response => {
         if (response.status === 'Success') {
           const todos = Array.isArray(response.data) ? response.data : [response.data];
+          // console.log(todos);
+
           return todos.map(todo => ({
             id: todo.id,
             title: todo.title,
@@ -27,7 +29,9 @@ export class TodoService {
             createdTime: todo.createdTime,
             updatedTime: todo.updatedTime,
             completedTime: todo.completedTime,
-            isCompleted: todo.isCompleted
+            isCompleted: todo.isCompleted,
+            labels: todo.labels,
+            mylabels: todo.myLabels
           }));
         } else {
           throw new Error(response.message);
@@ -51,7 +55,9 @@ export class TodoService {
             createdTime: todo.createdTime,
             updatedTime: todo.updatedTime,
             completedTime: todo.completedTime,
-            isCompleted: todo.isCompleted
+            isCompleted: todo.isCompleted,
+            labels: todo.labels,
+            mylabels: todo.mylabels
           };
         } else {
           throw new Error(response.message);
@@ -64,21 +70,13 @@ export class TodoService {
   }
 
   updateTodoCompletion(todo: Todo): Observable<Todo> {
-    // const updatedTodo = {
-    //   id: todo.id,
-    //   title: todo.title,
-    //   description: todo.description,
-    //   createdTime: todo.createdTime,
-    //   updatedTime: todo.updatedTime,
-    //   completedTime: todo.completedTime,
-    //   isCompleted: todo.isCompleted
-    // }; // Construct the updated todo object with the new completion status
+
     todo.isCompleted = todo.isCompleted == "0" ? "0" : "1";
     console.log("updateTodoCompletion", todo);
 
     return this.http.put<ResponseClass>(`${this.baseApiUrl}/api/todoall/${todo.id}`, todo).pipe(
       map(response => {
-        // console.log(response);
+        console.log(response);
         // const todo = response.data;
         // console.log("response is: " + todo);
 
@@ -92,7 +90,9 @@ export class TodoService {
             createdTime: todo.createdTime,
             updatedTime: todo.updatedTime,
             completedTime: todo.completedTime,
-            isCompleted: todo.isCompleted
+            isCompleted: todo.isCompleted,
+            labels: todo.labels,
+            mylabels: todo.mylabels
           };
           // return ; // Return void if the update was successful
         } else {

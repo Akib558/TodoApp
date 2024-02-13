@@ -12,6 +12,8 @@ namespace WebApi3.Models
 
         public string IsCompleted { get; set; }
 
-        // public string Labels { get; set;}
+        public string Labels { get; set;}
+
+        public string MyLabels { get; set; }
     }
 }

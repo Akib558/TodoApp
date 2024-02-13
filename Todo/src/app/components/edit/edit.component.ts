@@ -18,6 +18,8 @@ export class EditComponent implements OnInit {
           updatedTime: "",
           completedTime: "",
           isCompleted: "0",
+          labels: "",
+          mylabels: ""
   };
 
   constructor(
