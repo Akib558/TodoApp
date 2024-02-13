@@ -10,6 +10,7 @@ import { TodoService } from 'src/app/services/todo.service';
 export class TodosComponent implements OnInit {
 
   todos: Todo[] = [];
+  cdr: any;
   // todos: any;
 
   constructor(private todoService: TodoService){
@@ -35,18 +36,21 @@ export class TodosComponent implements OnInit {
 
   addTodo() {
     this.todoService.addTodo(this.newTodo).subscribe({
-      next: () => {
+      next: (todo) => {
+        // console.log('New todo added:', todo);
+        // console.log("Correct todo added");
         this.getAllTodos();
-        // Clear the form fields
-        this.newTodo = {
-          id: 0,
-          title: '',
-          description: ''
-        };
+        // this.todos.push(todo); // Add the new todo to the list
+        this.newTodo = { id: 0, title: "", description: "" }; // Clear the form fields
+
+        // this.cdr.detectChanges(); // Manually trigger change detection
+      },
+      error: (error) => {
+        console.error('Error adding todo:', error);
+        // console.log(this.todos);
       }
     });
   }
-
 
   deleteTodo(id: number) {
     this.todoService.deleteTodo(id).subscribe({

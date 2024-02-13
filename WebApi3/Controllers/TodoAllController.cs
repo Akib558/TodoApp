@@ -38,8 +38,9 @@ namespace WebApi3.Controllers
 
             try
             {
-                db.Post(todo);
-                return CreatedAtAction(nameof(Get), todo);
+                var res = db.Post(todo);
+                return Ok(res);
+                // return CreatedAtAction(nameof(Get), todo);
             }
             catch (Exception ex)
             {

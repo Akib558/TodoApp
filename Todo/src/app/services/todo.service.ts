@@ -32,8 +32,12 @@ export class TodoService {
     return this.http.post<ResponseClass>(`${this.baseApiUrl}/api/todoall`, newTodo).pipe(
       map(response => {
         if (response.status === 'Success') {
+          console.log(response.data);
+
           return response.data as Todo; // Assuming Todo is your Todo model
         } else {
+          console.log("I am getting an error in todo.service.ts");
+
           throw new Error(response.message); // Throw an error if response status is not 'Success'
         }
       }),
