@@ -10,44 +10,54 @@ import { TodoService } from 'src/app/services/todo.service';
 export class TodosComponent implements OnInit {
 
   todos: Todo[] = [];
-  cdr: any;
-  // todos: any;
-
-  constructor(private todoService: TodoService){
-
-  }
-
   newTodo: Todo = {
     id: 0,
     title: "",
-    description: ""
+    description: "",
+    createdTime: "",
+    updatedTime: "",
+    completedTime: "",
+    isCompleted: ""
   };
-  ngOnInit(): void{
+
+  constructor(private todoService: TodoService) {}
+
+  ngOnInit(): void {
     this.getAllTodos();
   }
 
-  getAllTodos(){
+  getAllTodos() {
     this.todoService.getAllTodos().subscribe({
-      next: (todos: any) => {
+      next: (todos: Todo[]) => {
         this.todos = todos;
+      },
+      error: (error) => {
+        console.error('Error retrieving todos:', error);
       }
     });
   }
 
   addTodo() {
+    if (!this.newTodo.title || !this.newTodo.description) {
+      // Alert the user or handle the validation error as needed
+      alert("Please fill in all fields before submitting.");
+      return; // Prevent form submission
+    }
     this.todoService.addTodo(this.newTodo).subscribe({
       next: (todo) => {
-        // console.log('New todo added:', todo);
-        // console.log("Correct todo added");
         this.getAllTodos();
-        // this.todos.push(todo); // Add the new todo to the list
-        this.newTodo = { id: 0, title: "", description: "" }; // Clear the form fields
-
-        // this.cdr.detectChanges(); // Manually trigger change detection
+        this.newTodo = {
+          id: 0,
+          title: "",
+          description: "",
+          createdTime: "",
+          updatedTime: "",
+          completedTime: "",
+          isCompleted: "0",
+        }; // Reset form
       },
       error: (error) => {
         console.error('Error adding todo:', error);
-        // console.log(this.todos);
       }
     });
   }
@@ -56,8 +66,32 @@ export class TodosComponent implements OnInit {
     this.todoService.deleteTodo(id).subscribe({
       next: () => {
         this.getAllTodos();
+      },
+      error: (error) => {
+        console.error('Error deleting todo:', error);
       }
     });
   }
+  getCheckboxValue(isCompletedString: string): boolean {
+    return isCompletedString === "1" ? true : false;
+  }
 
+  toggleTodoCompletion(todo: Todo, isCompletedString: string) {
+    // Toggle the completion status
+    todo.isCompleted = isCompletedString == "0" ? "1" : "0";
+    console.log(todo);
+
+    // Update the completion status on the server
+    this.todoService.updateTodoCompletion(todo).subscribe({
+      next: () => {
+        this.getAllTodos();
+        // Optional: You can handle success response if needed
+      },
+      error: (error) => {
+        console.error('Error updating todo completion status:', error);
+        // Rollback the change if update fails
+        // todo.isCompleted = todo.isCompleted === "0" ? "1" : "0";
+      }
+    });
+  }
 }

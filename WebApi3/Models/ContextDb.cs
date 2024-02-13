@@ -9,6 +9,7 @@ namespace WebApi3.Models
         private string connectionString = "Server=(localdb)\\myDB; Database=TodoCrudDB; Trusted_Connection=True;Encrypt=false;";
 
         // Get method with response handling
+            // Get method with response handling
         public ResponseClass Get()
         {
             try
@@ -17,7 +18,7 @@ namespace WebApi3.Models
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT ID, Title, Description FROM TODO1";
+                    string query = "SELECT ID, Title, Description, created_time, updated_time, completed_time, isCompleted, labels FROM TODO1";
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         connection.Open();
@@ -28,7 +29,12 @@ namespace WebApi3.Models
                             {
                                 ID = Convert.ToInt32(reader["ID"]),
                                 Title = Convert.ToString(reader["Title"]) ?? "Null Value",
-                                Description = Convert.ToString(reader["Description"]) ?? "Null value"
+                                Description = Convert.ToString(reader["Description"]) ?? "Null value",
+                                CreatedTime = Convert.ToString(reader["created_time"]) ?? "Null value",
+                                UpdatedTime = Convert.ToString(reader["updated_time"]) ?? "Null value",
+                                CompletedTime = Convert.ToString(reader["completed_time"]) ?? "Null value",
+                                IsCompleted = Convert.ToString(reader["isCompleted"]) ?? "0",
+                                // Labels = Convert.ToString(reader["labels"])?? "Null value"
                             };
                             todos.Add(todo);
                         }
@@ -60,7 +66,7 @@ namespace WebApi3.Models
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT ID, Title, Description FROM TODO1 WHERE ID = @Id";
+                    string query = "SELECT ID, Title, Description, created_time, updated_time, completed_time, isCompleted FROM TODO1 WHERE ID = @Id";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Id", id);
 
@@ -73,7 +79,14 @@ namespace WebApi3.Models
                         {
                             ID = Convert.ToInt32(reader["ID"]),
                             Title = Convert.ToString(reader["Title"]) ?? "Null Value",
-                            Description = Convert.ToString(reader["Description"]) ?? "Null value"
+                            Description = Convert.ToString(reader["Description"]) ?? "Null value",
+                            CreatedTime = Convert.ToString(reader["created_time"]) ?? "Null value",
+                            UpdatedTime = Convert.ToString(reader["updated_time"]) ?? "Null value",
+                            CompletedTime = Convert.ToString(reader["completed_time"]) ?? "Null value",
+                            IsCompleted = Convert.ToString(reader["isCompleted"]) ?? "0",
+                            // Labels = Convert.ToString(reader["labels"])?? "Null value"
+
+
                         };
                         return new ResponseClass
                         {
@@ -104,6 +117,7 @@ namespace WebApi3.Models
             }
         }
 
+
         // Post method with response handling
         public ResponseClass Post(TodoModelClass todo)
         {
@@ -111,10 +125,15 @@ namespace WebApi3.Models
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "INSERT INTO TODO1 (Title, Description) VALUES (@Title, @Description)";
+                    string query = "INSERT INTO TODO1 (Title, Description, created_time, updated_time, completed_time, isCompleted) VALUES (@Title, @Description, @CreatedTime, @UpdatedTime, @CompletedTime, @IsCompleted)";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Title", todo.Title ?? "");
                     command.Parameters.AddWithValue("@Description", todo.Description ?? "");
+                    command.Parameters.AddWithValue("@CreatedTime", todo.CreatedTime ?? "");
+                    command.Parameters.AddWithValue("@UpdatedTime", todo.UpdatedTime ?? "");
+                    command.Parameters.AddWithValue("@CompletedTime", todo.CompletedTime ?? "");
+                    command.Parameters.AddWithValue("@IsCompleted", todo.IsCompleted ?? "0");
+                    // command.Parameters.AddWithValue("@Labels", todo.Labels?? "");
 
                     connection.Open();
                     command.ExecuteNonQuery();
@@ -146,12 +165,16 @@ namespace WebApi3.Models
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "UPDATE TODO1 SET Title = @Title, Description = @Description WHERE ID = @Id";
+                    string query = "UPDATE TODO1 SET Title = @Title, Description = @Description, created_time = @CreatedTime, updated_time = @UpdatedTime, completed_time = @CompletedTime, isCompleted = @IsCompleted WHERE ID = @Id";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Title", updatedTodo.Title ?? "");
                     command.Parameters.AddWithValue("@Description", updatedTodo.Description ?? "");
+                    command.Parameters.AddWithValue("@CreatedTime", updatedTodo.CreatedTime ?? "");
+                    command.Parameters.AddWithValue("@UpdatedTime", updatedTodo.UpdatedTime ?? "");
+                    command.Parameters.AddWithValue("@CompletedTime", updatedTodo.CompletedTime ?? "");
+                    command.Parameters.AddWithValue("@IsCompleted", updatedTodo.IsCompleted ?? "0");
                     command.Parameters.AddWithValue("@Id", id);
-
+                    // command.Parameters.AddWithValue("@Labels",updatedTodo.Labels ?? "");
                     connection.Open();
                     int rowsAffected = command.ExecuteNonQuery();
 

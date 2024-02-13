@@ -36,11 +36,29 @@ namespace WebApi3.Controllers
                 return BadRequest("Invalid data provided.");
             }
 
+            // Set default values for CreatedTime and CompletedTime if not provided in the request
+            if (string.IsNullOrEmpty(todo.CreatedTime))
+            {
+                todo.CreatedTime = DateTime.Now.ToString();
+            }
+            if (string.IsNullOrEmpty(todo.UpdatedTime))
+            {
+                todo.UpdatedTime = todo.CreatedTime.ToString();
+            }
+            if (string.IsNullOrEmpty(todo.CompletedTime))
+            {
+                todo.CompletedTime = "Not completed yet.";
+            }
+
+            if (string.IsNullOrEmpty(todo.IsCompleted))
+            {
+                todo.IsCompleted = "0";
+            }
+
             try
             {
                 var res = db.Post(todo);
                 return Ok(res);
-                // return CreatedAtAction(nameof(Get), todo);
             }
             catch (Exception ex)
             {
@@ -54,6 +72,14 @@ namespace WebApi3.Controllers
         {
             try
             {
+                // Set completed time
+                if(updatedTodo.IsCompleted == "1"){
+                    updatedTodo.CompletedTime = Convert.ToString(DateTime.Now);
+                }
+                else{
+                    updatedTodo.CompletedTime = "Not completed yet.";
+                }
+
                 var existingTodo = db.Get(id);
                 if (existingTodo == null)
                 {

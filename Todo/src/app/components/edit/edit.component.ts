@@ -9,10 +9,15 @@ import { EditService } from 'src/app/services/edit.service';
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent implements OnInit {
+
   newTodo: Todo = {
     id: 0,
-    title: '',
-    description: ''
+          title: "",
+          description: "",
+          createdTime: "",
+          updatedTime: "",
+          completedTime: "",
+          isCompleted: "0",
   };
 
   constructor(
@@ -37,7 +42,13 @@ export class EditComponent implements OnInit {
       }
     });
   }
+  getCheckboxValue(isCompletedString: string): boolean {
+    return isCompletedString === "1" ? true : false;
+  }
 
+  toggleTodoCompletion(todo: Todo, isCompletedString: string) {
+    todo.isCompleted = isCompletedString == "0" ? "1" : "0";
+  }
   updateTodo(): void {
     this.editService.updateTodo(this.newTodo).subscribe({
       next: (updatedTodo: Todo) => {

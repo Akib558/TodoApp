@@ -8,8 +8,11 @@
         </div>
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
-          <!-- Apply CSS styling to increase the height of the textarea -->
           <textarea class="form-control description" name="description" id="description" [(ngModel)]="newTodo.description" style="height: 150px;"></textarea>
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="completed" name="completed" (change)="toggleTodoCompletion(newTodo, newTodo.isCompleted)" [checked]="getCheckboxValue(newTodo.isCompleted)" >
+          <label class="form-check-label" for="completed">Completed</label>
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
       </form>
