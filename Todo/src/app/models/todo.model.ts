@@ -9,6 +9,7 @@ export interface Todo {
   completedTime: string;
   isCompleted: string;
   labels: string;
-  mylabels: string;
+  myLabels: string;
+
 
 }

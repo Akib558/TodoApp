@@ -8,12 +8,42 @@
         </div>
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
-          <textarea class="form-control description" name="description" id="description" [(ngModel)]="newTodo.description" style="height: 150px;"></textarea>
+          <textarea class="form-control description" name="description" id="description"
+            [(ngModel)]="newTodo.description" style="height: 150px;"></textarea>
         </div>
-        <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="completed" name="completed" (change)="toggleTodoCompletion(newTodo, newTodo.isCompleted)" [checked]="getCheckboxValue(newTodo.isCompleted)" >
-          <label class="form-check-label" for="completed">Completed</label>
+        <div class="mb-3">
+          <label for="title" class="form-label">Add Label</label>
+          <input type="text" class="form-control" name="label" id="label" [(ngModel)]="labelText">
         </div>
+        <table class="table">
+          <tr>
+            <td class="align-middle"> <!-- Add class align-middle to vertically center content -->
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="completed" name="completed"
+                  (change)="toggleTodoCompletion(newTodo, newTodo.isCompleted)"
+                  [checked]="getCheckboxValue(newTodo.isCompleted)">
+                <label class="form-check-label" for="completed">Completed</label>
+              </div>
+              <li *ngFor="let label of mainlabelarray" (click)="onLabelSelected(label)"
+                class="list-inline-item label-item">
+                <ng-container *ngIf="showlabelarray.includes(label)">
+                  <div class="label-content border border-secondary rounded text-white bg-secondary p-1">{{ label }}
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!showlabelarray.includes(label)">
+                  <div class="label-content">{{ label }}</div>
+                </ng-container>
+              </li>
+            </td>
+            <td class="text-end align-middle">
+              <!-- Add class text-end for right alignment and align-middle to vertically center content -->
+              <p>Created at: {{newTodo.createdTime}}</p>
+              <p>Last Updated: {{newTodo.updatedTime}}</p>
+              <p>Completed: {{newTodo.completedTime}}</p>
+            </td>
+          </tr>
+        </table>
+
         <button type="submit" class="btn btn-primary">Update</button>
       </form>
     </div>

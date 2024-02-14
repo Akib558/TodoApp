@@ -8,17 +8,49 @@
       <label for="exampleInputPassword1" class="form-label">Description</label>
       <input type="text" class="form-control" name="description" id="description" [(ngModel)]="newTodo.description">
     </div>
-
-    <!-- Add a select dropdown for mylabels -->
-    <!-- <div class="mb-3">
-      <label for="mylabels" class="form-label">Labels</label>
-      <select class="form-select" name="labels" id="mylabels" [(ngModel)]="selectedLabel">
-        <option *ngFor="let label of mylabels" [value]="label">{{ label }}</option>
-      </select>
-    </div> -->
-
     <button type="submit" class="btn btn-success">Add</button>
   </form>
+
+  <br>
+  <table class="table">
+    <tr>
+      <td class="align-middle">
+        <div class="mb-3">
+          <ul class="list-inline">
+            <!-- <li *ngIf="mainlabelarray.length === 0" (click)="onLabelSelected(label)" class="list-inline-item label-item">
+              <div class="label-content">No Labels</div>
+            </li> -->
+            <li *ngFor="let label of mainlabelarray" (click)="onLabelSelected(label)"
+              class="list-inline-item label-item border_color">
+              <ng-container *ngIf="showlabelarray.includes(label)">
+                <div class="label-content border border-secondary rounded text-white bg-secondary p-2">{{ label }}</div>
+              </ng-container>
+              <ng-container *ngIf="!showlabelarray.includes(label)">
+                <div class="label-content border border-secondary rounded text-white bg-secondary p-1">{{ label }}</div>
+              </ng-container>
+            </li>
+          </ul>
+        </div>
+      </td>
+
+      <td class="align-middle text-end">
+        <ng-container *ngIf="showCompleteValue">
+          <input type="checkbox" class="btn-check" id="btn-check" checked autocomplete="off"
+            (change)="getShowCompleteStatus(true)">
+          <label class="btn btn-primary" for="btn-check">Show Complete</label>
+        </ng-container>
+        <ng-container *ngIf="!showCompleteValue">
+          <input type="checkbox" class="btn-check" id="btn-check" checked autocomplete="off"
+            (change)="getShowCompleteStatus(false)">
+          <label class="btn btn-primary" for="btn-check">Show All</label>
+        </ng-container>
+
+      </td>
+    </tr>
+  </table>
+
+
+
 
   <h1 class="text-center mt-4">My Todos</h1>
 
@@ -31,34 +63,50 @@
         <th scope="col">Completed Time</th>
         <th scope="col">Labels</th>
         <th scope="col">Actions</th>
+
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let todo of todos; let i = index" [style.background-color]="todo.isCompleted === '1' ? 'green' : 'inherit'" class="rounded-row">
-        <td>
-          <div class="form-check">
-            <input class="form-check-input form-check-input-lg" type="checkbox" id="completed{{todo.id}}" [checked]="getCheckboxValue(todo.isCompleted)" (change)="toggleTodoCompletion(todo, todo.isCompleted)">
-            <label class="form-check-label" for="completed{{todo.id}}">
-              <!-- Completed -->
-            </label>
-          </div>
-        </td>
-        <td>{{todo.title}}</td>
-        <td>{{todo.description}}</td>
-        <td>{{todo.completedTime}}</td>
-        <td>
-          <div class="mb-3">
-            <select class="form-select" name="labels" id="todoLabels" [(ngModel)]="newTodo.labels">
-              <option *ngFor="let label of newTodo.mylabels" [value]="label">{{ label }}</option>
-            </select>
-          </div>
-        </td>
-        <td>
-          <div class="d-flex">
-            <button type="button" class="btn btn-primary me-1" [routerLink]="['/edit', todo.id]">Edit</button>
-            <button type="button" class="btn btn-danger" (click)="deleteTodo(todo.id)">Delete</button>
-          </div>
-        </td>
+      <tr *ngFor="let todolabel of todolabels; let i = index"
+        [style.background-color]="todolabel.todo.isCompleted === '1' ? 'green' : 'inherit'" class="rounded-row">
+        <ng-container *ngIf="isPresent(todolabel.labels.mylabelsarray, showlabelarray)">
+
+          <ng-container *ngIf="showCompleteValue ? true : todolabel.todo.isCompleted == '1'">
+
+            <td>
+              <div class="form-check">
+                <input class="form-check-input form-check-input-lg" type="checkbox" id="completed{{todolabel.todo.id}}"
+                  [checked]="getCheckboxValue(todolabel.todo.isCompleted)"
+                  (change)="toggleTodoCompletion(todolabel.todo, todolabel.todo.isCompleted)">
+                <label class="form-check-label" for="completed{{todolabel.todo.id}}">
+                  <!-- Completed -->
+                </label>
+              </div>
+            </td>
+            <td>{{todolabel.todo.title}}</td>
+            <td>{{todolabel.todo.description}}</td>
+            <td>{{todolabel.todo.completedTime}}</td>
+            <td>
+              <div class="mb-3">
+                <ul class="list-inline">
+                  <li *ngIf="todolabel.labels.mylabelsarray.length === 0" class="list-inline-item label-item">
+                    <div class="label-content">No Labels</div>
+                  </li>
+                  <li *ngFor="let label of todolabel.labels.mylabelsarray" class="list-inline-item label-item">
+                    <div class="label-content">{{ label }}</div>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex">
+                <button type="button" class="btn btn-primary me-1"
+                  [routerLink]="['/edit', todolabel.todo.id]">Edit</button>
+                <button type="button" class="btn btn-danger" (click)="deleteTodo(todolabel.todo.id)">Delete</button>
+              </div>
+            </td>
+          </ng-container>
+        </ng-container>
       </tr>
     </tbody>
   </table>
