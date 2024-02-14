@@ -34,17 +34,13 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
     const todoId = this.route.snapshot.params['id'];
-    // const mainlabelarray = this.route.snapshot.params['mainlabelarray'];
     this.getAllTodos();
     this.getTodoById(todoId);
-    // this.mainlabelarray = this.todolabels[0].labels.labelsarray;
-    // console.log("shdjkhf");
+
   }
 
   labelText: string = '';
-
   mainlabelarray: string[] = this.newTodo.labels.split(',');
-
   showlabelarray: string[] = this.newTodo.myLabels.split(',');
 
   isPresent(arg0: string[], arg1: string[]): boolean {
@@ -65,14 +61,12 @@ export class EditComponent implements OnInit {
       next: (todolabels: TodoLabels[]) => {
         this.todolabels = todolabels;
         const tempmainlabelarray = new Set();
-        // Iterate over each TodoLabels object
+
         this.todolabels.forEach((todolabel) => {
-          // Split the labels string into an array and assign it to labelsarray
+
           todolabel.labels.labelsarray = todolabel.todo.labels.split(',');
           console.log(todolabel.labels.labelsarray);
 
-          // this.mainlabelarray = todolabel.labels.labelsarray;
-          // Initialize and populate mylabelsarray
           todolabel.labels.mylabelsarray = [];
           if (todolabel.todo.myLabels) {
             const labelsArray = todolabel.todo.myLabels.split(',');
@@ -111,7 +105,7 @@ export class EditComponent implements OnInit {
     this.editService.getTodoById(id).subscribe({
       next: (todo: Todo) => {
         this.newTodo = todo;
-        // this.mainlabelarray = this.newTodo.labels.split(',');
+
 
         this.showlabelarray = this.newTodo.myLabels.split(',');
       },
@@ -135,12 +129,12 @@ export class EditComponent implements OnInit {
     this.editService.updateTodo(this.newTodo).subscribe({
       next: (updatedTodo: Todo) => {
         console.log('Todo updated successfully:', updatedTodo);
-        // Navigate to the home page after updating the todo
-        this.router.navigate(['/']); // Navigate to the home page
+
+        this.router.navigate(['/']);
       },
       error: (error) => {
         console.error('Error updating todo:', error);
-        // Optionally, you can show an error message here
+
       },
     });
   }

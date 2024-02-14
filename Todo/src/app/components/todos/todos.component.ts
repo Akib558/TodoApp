@@ -29,7 +29,7 @@ export class TodosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllTodos();
-    // this.mainlabelarray = this.todolabels[0].labels.labelsarray;
+
   }
 
   mainlabelarray: string[] = [];
@@ -43,7 +43,7 @@ export class TodosComponent implements OnInit {
 
     return (this.showCompleteValue = !arg);
   }
-  // selectedLabels: { [key: string]: boolean } = {}; // Object to store selected labels
+
   isPresent(arg0: string[], arg1: string[]): boolean {
     if (arg1.length == 0) return true;
     return arg0.some((arg) => arg1.includes(arg));
@@ -93,7 +93,8 @@ export class TodosComponent implements OnInit {
           }
         });
         if (this.mainlabelarray[0].length == 0) {
-          this.mainlabelarray.splice(0, 1);
+          // this.mainlabelarray.splice(0, 1);
+          this.mainlabelarray = this.mainlabelarray.filter(element => element !== "")
         }
         console.log(this.mainlabelarray);
       },
@@ -105,7 +106,7 @@ export class TodosComponent implements OnInit {
 
   addTodo() {
     if (!this.newTodo.title || !this.newTodo.description) {
-      // Alert the user or handle the validation error as needed
+
       alert('Please fill in all fields before submitting.');
       return; // Prevent form submission
     }
@@ -153,16 +154,15 @@ export class TodosComponent implements OnInit {
     todo.myLabels = todo.myLabels ?? '';
     console.log(todo);
 
-    // Update the completion status on the server
+
     this.todoService.updateTodoCompletion(todo).subscribe({
       next: () => {
         this.getAllTodos();
-        // Optional: You can handle success response if needed
+
       },
       error: (error) => {
         console.error('Error updating todo completion status:', error);
-        // Rollback the change if update fails
-        // todo.isCompleted = todo.isCompleted === "0" ? "1" : "0";
+
       },
     });
   }

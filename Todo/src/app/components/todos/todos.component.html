@@ -54,7 +54,7 @@
 
   <h1 class="text-center mt-4">My Todos</h1>
 
-  <table class="table table-striped mt-3">
+  <table class="table table-bordered ">
     <thead>
       <tr>
         <th scope="col"></th>
@@ -75,12 +75,30 @@
 
             <td>
               <div class="form-check">
-                <input class="form-check-input form-check-input-lg" type="checkbox" id="completed{{todolabel.todo.id}}"
+                <!-- <input class="form-check-input form-check-input-lg" type="checkbox" id="completed{{todolabel.todo.id}}"
                   [checked]="getCheckboxValue(todolabel.todo.isCompleted)"
                   (change)="toggleTodoCompletion(todolabel.todo, todolabel.todo.isCompleted)">
-                <label class="form-check-label" for="completed{{todolabel.todo.id}}">
-                  <!-- Completed -->
-                </label>
+                <label class="form-check-label" for="completed{{todolabel.todo.id}}"></label> -->
+
+                <ng-container *ngIf="getCheckboxValue(todolabel.todo.isCompleted)">
+
+                  <input type="checkbox" class="btn-check form-check-input form-check-input-lg" id="completed{{todolabel.todo.id}}" autocomplete="off"
+                  [checked]="getCheckboxValue(todolabel.todo.isCompleted)"
+                  (change)="toggleTodoCompletion(todolabel.todo, todolabel.todo.isCompleted)">
+                <label class="btn btn-outline-primary" for="completed{{todolabel.todo.id}}">Complete</label>
+
+                </ng-container>
+
+                <ng-container *ngIf="!getCheckboxValue(todolabel.todo.isCompleted)d">
+
+                  <input type="checkbox" class="btn-check form-check-input form-check-input-lg" id="completed{{todolabel.todo.id}}" autocomplete="off"
+                  [checked]="getCheckboxValue(todolabel.todo.isCompleted)"
+                  (change)="toggleTodoCompletion(todolabel.todo, todolabel.todo.isCompleted)">
+                <label class="btn btn-outline-primary" for="completed{{todolabel.todo.id}}">Not Complete</label>
+
+                </ng-container>
+
+
               </div>
             </td>
             <td>{{todolabel.todo.title}}</td>
