@@ -28,6 +28,17 @@ namespace WebApi3.Controllers
             return Ok(todo);
         }
 
+        [HttpGet("labels")]
+        public IActionResult GetLabels()
+        {
+            var todo = db.GetLabels();
+            if (todo == null)
+            {
+                return NotFound();
+            }
+            return Ok(todo);
+        }
+
         [HttpPost]
         public IActionResult Post(TodoModelClass todo)
         {

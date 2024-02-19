@@ -119,6 +119,52 @@ namespace WebApi3.Models
             }
         }
 
+        public ResponseClass GetLabels(){
+            try
+            {
+               string todosString = "";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT mylabels FROM TODO1";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            if(Convert.ToString(reader["mylabels"]) != ""){
+                                todosString += Convert.ToString(reader["mylabels"])+",";
+                                // todos.Add(Convert.ToString(reader["mylabels"]));
+                            }
+                        }
+                    }
+                }
+
+                List<string> labels = todosString.Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
+            .Distinct()
+            .ToList();
+
+                // todos.RemoveAll(item => string.IsNullOrEmpty(item));
+                // todos.to
+                return new ResponseClass
+                {
+                    Status = "Success",
+                    Message = "Todos retrieved successfully",
+                    Data = labels
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseClass
+                {
+                    Status = "Error",
+                    Message = ex.Message,
+                    Data = null
+                };
+            }
+        }
+
 
         // Post method with response handling
         public ResponseClass Post(TodoModelClass todo)
@@ -177,9 +223,12 @@ namespace WebApi3.Models
                     command.Parameters.AddWithValue("@CompletedTime", updatedTodo.CompletedTime ?? "");
                     command.Parameters.AddWithValue("@IsCompleted", updatedTodo.IsCompleted ?? "0");
                     command.Parameters.AddWithValue("@Id", id);
+                    updatedTodo.MyLabels = Convert.ToString(String.Join(',',updatedTodo.MyLabels.Split(',').Where(s => !string.IsNullOrWhiteSpace(s))
+                                                                .Distinct()
+                                                                .ToList())) ?? "";
                     command.Parameters.AddWithValue("@Labels",updatedTodo.Labels ?? "");
                     command.Parameters.AddWithValue("@MyLabels", updatedTodo.MyLabels?? "");
-                    connection.Open();
+                    connection.Open();  
                     int rowsAffected = command.ExecuteNonQuery();
 
                     if (rowsAffected == 0)

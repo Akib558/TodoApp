@@ -7,6 +7,7 @@ import { TodosComponent } from './components/todos/todos.component';
 import { FormsModule } from '@angular/forms';
 import { EditComponent } from './components/edit/edit.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AppModuleModule } from './app-module/app-module.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +19,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    MatSlideToggleModule,
+    // MatSlideToggleModule,
+    AppModuleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

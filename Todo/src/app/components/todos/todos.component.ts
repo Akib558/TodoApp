@@ -4,12 +4,17 @@ import { Labels } from 'src/app/models/labels.model';
 import { TodoService } from 'src/app/services/todo.service';
 import { TodoLabels } from 'src/app/models/todolabels.model';
 
+
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
   styleUrls: ['./todos.component.css'],
 })
+
+
 export class TodosComponent implements OnInit {
+
+
   todos: Todo[] = [];
   todolabels: TodoLabels[] = [];
   newTodo: Todo = {
@@ -23,52 +28,26 @@ export class TodosComponent implements OnInit {
     labels: '',
     myLabels: '',
   };
-  // selectedLabel: any;
 
+  displayedColumns: string[] = ['status', 'title', 'description', 'completedTime', 'labels', 'actions'];
   constructor(private todoService: TodoService) {}
-
   ngOnInit(): void {
     this.getAllTodos();
 
   }
 
   mainlabelarray: string[] = [];
-
   showlabelarray: string[] = [];
-
   showCompleteValue: boolean = true;
+  temptodoLabels: TodoLabels[] = [];
 
-  getShowCompleteStatus(arg: boolean): boolean {
-    console.log(this.showCompleteValue);
-
-    return (this.showCompleteValue = !arg);
-  }
-
-  isPresent(arg0: string[], arg1: string[]): boolean {
-    if (arg1.length == 0) return true;
-    return arg0.some((arg) => arg1.includes(arg));
-  }
-  onLabelSelected(label: string) {
-    if (this.showlabelarray.includes(label)) {
-      this.showlabelarray.splice(this.showlabelarray.indexOf(label), 1);
-    } else {
-      this.showlabelarray.push(label);
-    }
-    console.log(this.showlabelarray);
-  }
   getAllTodos() {
     this.todoService.getAllTodos().subscribe({
       next: (todolabels: TodoLabels[]) => {
         this.todolabels = todolabels;
-        const tempmainlabelarray = new Set();
-        // Iterate over each TodoLabels object
         this.todolabels.forEach((todolabel) => {
-          // Split the labels string into an array and assign it to labelsarray
-          todolabel.labels.labelsarray = todolabel.todo.labels.split(',');
-          console.log(todolabel.labels.labelsarray);
 
-          // this.mainlabelarray = todolabel.labels.labelsarray;
-          // Initialize and populate mylabelsarray
+          todolabel.labels.labelsarray = todolabel.todo.labels.split(',');
           todolabel.labels.mylabelsarray = [];
           if (todolabel.todo.myLabels) {
             const labelsArray = todolabel.todo.myLabels.split(',');
@@ -92,11 +71,25 @@ export class TodosComponent implements OnInit {
             }
           }
         });
+        this.temptodoLabels = todolabels; // this will take my array and store it for later usage
+        if(this.showlabelarray.length > 0){
+          this.todolabels = this.temptodoLabels.filter(arg => arg.labels.mylabelsarray.some(label => this.showlabelarray.includes(label)));
+          console.log(this.todolabels);
+        }
+        else{
+          this.todolabels = this.temptodoLabels;
+        }
+
+        if(this.showCompleteValue != true){
+          this.todolabels = this.todolabels.filter(arg => arg.todo.isCompleted == "1");
+        }
+
+
+
         if (this.mainlabelarray[0].length == 0) {
-          // this.mainlabelarray.splice(0, 1);
           this.mainlabelarray = this.mainlabelarray.filter(element => element !== "")
         }
-        console.log(this.mainlabelarray);
+
       },
       error: (error) => {
         console.error('Error retrieving todos:', error);
@@ -152,8 +145,6 @@ export class TodosComponent implements OnInit {
     // Toggle the completion status
     todo.isCompleted = isCompletedString == '0' ? '1' : '0';
     todo.myLabels = todo.myLabels ?? '';
-    console.log(todo);
-
 
     this.todoService.updateTodoCompletion(todo).subscribe({
       next: () => {
@@ -166,4 +157,72 @@ export class TodosComponent implements OnInit {
       },
     });
   }
+
+  getShowCompleteStatus(arg: boolean): boolean {
+
+    if(this.showCompleteValue == true) {
+      this.todolabels = this.todolabels.filter(arg => arg.todo.isCompleted == "1");
+
+    }
+    else{
+      this.getAllTodos();
+    }
+
+    console.log("after pressing toggle: " + this.todolabels);
+
+    return (this.showCompleteValue = !arg);
+  }
+
+  isPresent(arg0: string[], arg1: string[]): boolean {
+    if (arg1.length == 0) return true;
+    return arg0.some((arg) => arg1.includes(arg));
+  }
+  onLabelSelected(label: string) {
+    if (this.showlabelarray.includes(label)) {
+      this.showlabelarray.splice(this.showlabelarray.indexOf(label), 1);
+    } else {
+      this.showlabelarray.push(label);
+    }
+    if(this.showlabelarray.length > 0){
+      this.todolabels = this.temptodoLabels.filter(arg => arg.labels.mylabelsarray.some(label => this.showlabelarray.includes(label)));
+      console.log(this.todolabels);
+    }
+    else{
+      this.todolabels = this.temptodoLabels;
+    }
+    if(this.showCompleteValue != true){
+      this.todolabels = this.todolabels.filter(arg => arg.todo.isCompleted == "1");
+    }
+    // this.todolabels = this.todolabels.filter(arg => arg.todo)
+    console.log("ShowLabelArray: "+this.showlabelarray);
+  }
+
+
+  searchTerm: string = '';
+
+
+  onSearch() {
+    if (this.searchTerm.trim() !== '') {
+      this.todolabels = this.temptodoLabels.filter(item => {
+        // Customize this logic based on your data structure
+        return item.todo.title.toLowerCase().includes(this.searchTerm.toLowerCase());
+      });
+    } else {
+      this.todolabels = this.temptodoLabels; // Reset to original data if search term is empty
+    }
+  }
+
+  isExpired(updatedTime: string): boolean {
+    const currentTime = new Date();
+    const completionTime = new Date(updatedTime);
+    return completionTime < currentTime;
+  }
+
+  getIsCompletedStatus(status: string): boolean {
+    if(status == "1"){
+      return true;
+    }
+    return false;
+  }
+
 }

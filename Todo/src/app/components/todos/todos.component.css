@@ -1,0 +1,17 @@
+.expired {
+  background-color: rgba(187, 242, 230, 0.1)
+}
+.rounded-table {
+  border-color: black;
+  outline-color: black;
+  border-radius: 30px; /* Adjust the value as needed */
+  overflow: hidden; /* Ensure overflow is hidden to properly round the corners */
+  /* border: 2px solid black; Set border color and width */
+
+}
+.mat-elevation-z8 {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adjust the values as needed */
+  border: 1px solid #ddd;
+  text-align: center;
+}
+

@@ -40,8 +40,8 @@ export class EditComponent implements OnInit {
   }
 
   labelText: string = '';
-  mainlabelarray: string[] = this.newTodo.labels.split(',');
-  showlabelarray: string[] = this.newTodo.myLabels.split(',');
+  mainlabelarray: string[] = [];
+  showlabelarray: string[] = [];
 
   isPresent(arg0: string[], arg1: string[]): boolean {
     if (arg1.length == 0) return true;
