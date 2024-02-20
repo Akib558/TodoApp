@@ -2,6 +2,7 @@
 // using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using WebApi3.Models;
+using WebApi3.Models.Users;
 
 namespace WebApi3.Controllers
 {
@@ -10,11 +11,21 @@ namespace WebApi3.Controllers
     public class TodoAllController : ControllerBase
     {
         private readonly ContextDb db = new ContextDb();
-    
+        private readonly UserClass us = new UserClass();
         [HttpGet]
         public ResponseClass Get()
         {
             return db.Get();
+        }
+
+        [HttpPost("login")]
+
+        public IActionResult Get(LoginModelClass loginModel){
+            var login = us.Get(loginModel);
+            if(login == null){
+                return NotFound();
+            }
+            return Ok(login);
         }
         
         [HttpGet("{id}")]
@@ -76,6 +87,47 @@ namespace WebApi3.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+
+        [HttpPost("register")]
+        public IActionResult Register(RegisterModelClass user)
+        {
+            // if (todo == null)
+            // {
+            //     return BadRequest("Invalid data provided.");
+            // }
+
+            // // Set default values for CreatedTime and CompletedTime if not provided in the request
+            // if (string.IsNullOrEmpty(todo.CreatedTime))
+            // {
+            //     todo.CreatedTime = DateTime.Now.ToString();
+            // }
+            // if (string.IsNullOrEmpty(todo.UpdatedTime))
+            // {
+            //     todo.UpdatedTime = todo.CreatedTime.ToString();
+            // }
+            // if (string.IsNullOrEmpty(todo.CompletedTime))
+            // {
+            //     todo.CompletedTime = "Not completed yet.";
+            // }
+
+            // if (string.IsNullOrEmpty(todo.IsCompleted))
+            // {
+            //     todo.IsCompleted = "0";
+            // }
+
+            try
+            {
+                var res = us.Post(user);
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
 
 
         [HttpPut("{id}")]

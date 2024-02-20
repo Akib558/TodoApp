@@ -1,0 +1,15 @@
+  <form #form="ngForm" (ngSubmit)="addUser()" class="form-container">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Username</label>
+      <input type="text" class="form-control" name="title" id="title" [(ngModel)]="reg.username">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="text" class="form-control" name="description" id="description" [(ngModel)]="reg.password">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Email</label>
+      <input type="email" class="form-control" name="description" id="description" [(ngModel)]="reg.email">
+    </div>
+    <button type="submit" class="btn btn-success">Add</button>
+  </form>

@@ -13,6 +13,11 @@ import {MatIcon, MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {Component} from '@angular/core';
 import {NgIf} from '@angular/common';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSnackBar, MatSnackBarRef, MatSnackBarModule} from '@angular/material/snack-bar';
 
 const material = [
   CommonModule,
@@ -26,7 +31,11 @@ const material = [
   MatChipsModule,
   MatInputModule,
   MatIconModule,
-  MatSidenavModule, NgIf, MatButtonModule
+  MatSidenavModule, NgIf, MatButtonModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  BrowserAnimationsModule,
+  MatInputModule, MatButtonModule, MatSnackBarModule
 ];
 
 
