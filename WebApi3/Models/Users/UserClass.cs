@@ -66,15 +66,21 @@ namespace WebApi3.Models.Users
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT * FROM UserTable WHERE username = @Username and password = @Password";
+                    //  return new ResponseClass
+                    //     {
+                    //         Status = loginModelClass.Password.ToString()+loginModelClass.Username.ToString(),
+                    //         Message = "Login successful",
+                    //         Data = null
+                    //     };
+                    string query = "SELECT * FROM UserTable WHERE username = @Username and password_hash = @Password";
                     SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@Username", loginModelClass.Username);
-                    command.Parameters.AddWithValue("@Password", loginModelClass.Password);
+                    command.Parameters.AddWithValue("@Username", loginModelClass.Username.ToString());
+                    command.Parameters.AddWithValue("@Password", loginModelClass.Password.ToString());
 
                     connection.Open();
-                    int rowsAffected = command.ExecuteNonQuery();
+                    SqlDataReader reader = command.ExecuteReader();
 
-                    if (rowsAffected > 0)
+                    if (reader.Read())
                     {
 
                         return new ResponseClass
