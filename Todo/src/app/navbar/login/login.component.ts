@@ -31,17 +31,17 @@ export class LoginComponent {
     //   }
     // })
 
-    // this.loginService.getUser(this.usr).subscribe({
-    //   next: (usr) => {
-    //     console.log(usr);
-    //     // this.usr.email = '';
-    //     this.usr.password = '';
-    //     this.usr.username = '';
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //   }
-    // });
+    this.loginService.getUser(this.usr).subscribe({
+      next: (usr) => {
+        console.log(usr);
+        // this.usr.email = '';
+        this.usr.password = '';
+        this.usr.username = '';
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
   }
 
 }

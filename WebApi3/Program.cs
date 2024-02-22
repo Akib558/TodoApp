@@ -1,91 +1,36 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using WebApi3.Controllers;
+using WebApi3.Repositories.Implementations;
+using WebApi3.Repositories.Interfaces;
+using WebApi3.Services.implementations;
+using WebApi3.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+builder.Services.AddScoped<ITodoService, TodoService>();
 
 builder.Services.AddControllers();
-// // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-// builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
-
-
-// builder.Services.AddCors(options =>
-// {
-//     options.AddDefaultPolicy(
-//    policy =>
-//         {
-//             policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-//         }     
-//     );
-// });
 
 var app = builder.Build();
 
-// // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+app.UseRouting();
 
 app.UseCors(policy =>
-        {
-            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-        });
-
-// app.UseHttpsRedirection();
-
-// app.UseAuthorization();
-
-// app.MapControllers();
-
-
-
-
-
-////////////
-
-// Manually map TodoAllController
-app.UseRouting();
-app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllerRoute(
-        name: "todoAll",
-        pattern: "/api/todoall",
-        defaults: new { controller = "TodoAll", action = nameof(TodoAllController.Get) }
-    );
-
-    // Add more controller routes as needed
+    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 });
 
-app.Run();
+app.UseAuthorization();
 
-
-//////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// app.MapGet("/api/todoall", ()=> "");
-
-// app.MapGet("/", ()=> "Hello World");
-
+app.MapControllers();
 
 app.Run();

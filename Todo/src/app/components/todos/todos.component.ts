@@ -10,10 +10,20 @@ import {
   MatSnackBarConfig,
 } from '@angular/material/snack-bar';
 
+
+
+
+
+
+
+
+
+
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
   styleUrls: ['./todos.component.css'],
+  // imports: [NgbAlertModule],
   template: `
     <td>
       <button
@@ -26,6 +36,11 @@ import {
     </td>
   `,
 })
+
+
+
+
+
 export class TodosComponent implements OnInit {
   todos: Todo[] = [];
   todolabels: TodoLabels[] = [];
@@ -60,6 +75,7 @@ export class TodosComponent implements OnInit {
     'labels',
     'actions',
   ];
+// success: string;
   // private _snackBar: any;
   constructor(
     private todoService: TodoService,
@@ -74,11 +90,10 @@ export class TodosComponent implements OnInit {
   showCompleteValue: boolean = true;
   temptodoLabels: TodoLabels[] = [];
 
-  // openSnackBar() {
-  //   this._snackBar.openFromComponent(PizzaPartyAnnotatedComponent, {
-  //     duration: this.durationInSeconds * 1000,
-  //   });
-  // }
+
+  showSuccessMessage: boolean = false;
+  showDeleteMessage: boolean = false;
+  showTitleEmptyMessage: boolean = false;
 
   getAllTodos() {
     this.todoService.getAllTodos().subscribe({
@@ -140,17 +155,58 @@ export class TodosComponent implements OnInit {
   }
 
   addTodo() {
-    if (!this.newTodo.title || !this.newTodo.description) {
-      alert('Please fill in all fields before submitting.');
-      return; // Prevent form submission
+    if (!this.newTodo.title) {
+      this.showTitleEmptyMessage = true;
+      setTimeout(() => {
+        this.showTitleEmptyMessage = false;
+      }, 2000);
+      return;
     }
     if (this.newTodo.labels.length == 0) {
       this.newTodo.labels = 'daily,weekly,monthly';
     }
     console.log('Create TIme: ' + this.newTodo.createdTime);
 
+    var tempTitle = "";
+    var tempDescription = this.newTodo.description;
+
+
+    var titleWordsArray = this.newTodo.title.split(' ');
+    for(var i = 0; i < titleWordsArray.length; i++) {
+      console.log(titleWordsArray[i]);
+
+      if(titleWordsArray[i].length > 1){
+        if(titleWordsArray[i][0] == '#'){
+          titleWordsArray[i] = titleWordsArray[i].slice(1);
+          this.newTodo.myLabels += (this.newTodo.myLabels.length > 0 ? ',':'')+titleWordsArray[i];
+        }
+        else{
+          tempTitle += (tempTitle.length > 0 ? ' ':'')+titleWordsArray[i];
+          console.log(tempTitle);
+
+        }
+      }
+    }
+
+    if(tempTitle.length > 0)
+    this.newTodo.title = tempTitle;
+
+    // console.log(this.newTodo.title);
+
+
+    // return;
+
+
+
+
+
+
+
+
+
     this.todoService.addTodo(this.newTodo).subscribe({
       next: (todo) => {
+        this.showSuccessMessage = true;
         this.getAllTodos();
         this.newTodo = {
           id: 0,
@@ -163,6 +219,9 @@ export class TodosComponent implements OnInit {
           labels: '',
           myLabels: '',
         }; // Reset form
+        setTimeout(() => {
+          this.showSuccessMessage = false;
+        }, 2000);
       },
       error: (error) => {
         console.error('Error adding todo:', error);
@@ -172,9 +231,13 @@ export class TodosComponent implements OnInit {
 
   deleteTodo(id: number, todo: Todo) {
     this.undoTodo = todo;
+    this.showDeleteMessage = true;
     this.todoService.deleteTodo(id).subscribe({
       next: () => {
         this.getAllTodos();
+        setTimeout(() => {
+          this.showDeleteMessage = false;
+        }, 2000);
       },
       error: (error) => {
         console.error('Error deleting todo:', error);
@@ -271,37 +334,29 @@ export class TodosComponent implements OnInit {
   }
   // durationInSeconds = 5;
 
-  openSnackBar(message: string, action: string) {
-    const config = new MatSnackBarConfig();
-    config.duration = 2000; // Duration of the snack bar in milliseconds (default is 2750)
-    config.horizontalPosition = 'center'; // Horizontal position of the snack bar ('start', 'center', 'end', 'left', 'right')
-    config.verticalPosition = 'bottom'; // Vertical position of the snack bar ('top', 'bottom')
-    config.panelClass = ['custom-snackbar-delete']; // Custom CSS class for styling the snack bar
+  undoTodoFunc() {
 
-    const snackBarRef = this._snackBar.open(message, action, config);
-    snackBarRef.onAction().subscribe(() => {
-      // Call your function when the action button is clicked
-      // console.log("Snackbar is clicked");
-      this.todoService.addTodo(this.undoTodo).subscribe({
-        next: (todo) => {
-          this.getAllTodos();
-          this.newTodo = {
-            id: 0,
-            title: '',
-            description: '',
-            createdTime: '',
-            updatedTime: '',
-            completedTime: '',
-            isCompleted: '0',
-            labels: '',
-            myLabels: '',
-          }; // Reset form
-        },
-        error: (error) => {
-          console.error('Error adding todo:', error);
-        },
-      });
+    this.todoService.addTodo(this.undoTodo).subscribe({
+      next: (todo) => {
+        this.getAllTodos();
+        this.newTodo = {
+          id: 0,
+          title: '',
+          description: '',
+          createdTime: '',
+          updatedTime: '',
+          completedTime: '',
+          isCompleted: '0',
+          labels: '',
+          myLabels: '',
+        };
+        this.showDeleteMessage = false;
+      },
+      error: (error) => {
+        console.error('Error adding todo:', error);
+      },
     });
+
   }
 
   isExpired(updatedTime: string): boolean {

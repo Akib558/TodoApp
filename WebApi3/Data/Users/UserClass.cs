@@ -1,9 +1,14 @@
+// using System.Data.SqlClient;
 using System.Data.SqlClient;
+
+// using Sql.Data.SqlClient;
+
 namespace WebApi3.Models.Users
 {
     public class UserClass
     {
         private string connectionString = "Server=(localdb)\\myDB; Database=TodoCrudDB; Trusted_Connection=True;Encrypt=false;";
+        // string connectionString = "server=localhost;database=TodoCrudDB;uid=root;password=amijaninaok;";
 
         // Get method with response handling
         // Get method with response handling
@@ -66,12 +71,12 @@ namespace WebApi3.Models.Users
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    //  return new ResponseClass
-                    //     {
-                    //         Status = loginModelClass.Password.ToString()+loginModelClass.Username.ToString(),
-                    //         Message = "Login successful",
-                    //         Data = null
-                    //     };
+                    // return new ResponseClass
+                    // {
+                    //     Status = loginModelClass.Password.ToString() + loginModelClass.Username.ToString(),
+                    //     Message = "Login successful",
+                    //     Data = null
+                    // };
                     string query = "SELECT * FROM UserTable WHERE username = @Username and password_hash = @Password";
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Username", loginModelClass.Username.ToString());

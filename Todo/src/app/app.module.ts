@@ -11,6 +11,8 @@ import { AppModuleModule } from './app-module/app-module.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RegistrationComponent } from './navbar/register/registration.component';
 import { LoginComponent } from './navbar/login/login.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+// import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 // import { RegisterComponent } from './navbar/register/register.component';
 @NgModule({
   declarations: [
@@ -19,8 +21,7 @@ import { LoginComponent } from './navbar/login/login.component';
     EditComponent,
     NavbarComponent,
     RegistrationComponent,
-    LoginComponent
-    // RegisterComponent
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,7 +29,9 @@ import { LoginComponent } from './navbar/login/login.component';
     HttpClientModule,
     FormsModule,
     // MatSlideToggleModule,
-    AppModuleModule
+    AppModuleModule,
+    NgbModule,
+    // NgbAlertModule
   ],
   providers: [],
   bootstrap: [AppComponent]

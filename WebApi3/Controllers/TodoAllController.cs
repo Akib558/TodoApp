@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApi3.Models;
 using WebApi3.Models.Users;
+using WebApi3.Services.Interfaces;
 
 namespace WebApi3.Controllers
 {
@@ -10,12 +11,20 @@ namespace WebApi3.Controllers
     [Route("api/[controller]")]
     public class TodoAllController : ControllerBase
     {
-        private readonly ContextDb db = new ContextDb();
+        // private readonly ContextDb db = new ContextDb();
+        private readonly ITodoService _todoService;
         private readonly UserClass us = new UserClass();
-        [HttpGet]
-        public ResponseClass Get()
+
+        public TodoAllController(ITodoService todoService)
         {
-            return db.Get();
+            _todoService = todoService;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var res = _todoService.Get();
+            return Ok(res);
         }
 
         [HttpPost("login")]
@@ -31,61 +40,26 @@ namespace WebApi3.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var todo = db.Get(id);
-            if (todo == null)
-            {
-                return NotFound();
-            }
-            return Ok(todo);
+            var res = _todoService.GetById(id);
+            return Ok(res);
         }
 
         [HttpGet("labels")]
         public IActionResult GetLabels()
         {
-            var todo = db.GetLabels();
-            if (todo == null)
-            {
-                return NotFound();
-            }
-            return Ok(todo);
+            var res = _todoService.GetLabels();
+            return Ok(res);
         }
 
         [HttpPost]
         public IActionResult Post(TodoModelClass todo)
         {
-            if (todo == null)
-            {
-                return BadRequest("Invalid data provided.");
-            }
+           
 
-            // Set default values for CreatedTime and CompletedTime if not provided in the request
-            if (string.IsNullOrEmpty(todo.CreatedTime))
-            {
-                todo.CreatedTime = DateTime.Now.ToString();
-            }
-            if (string.IsNullOrEmpty(todo.UpdatedTime))
-            {
-                todo.UpdatedTime = todo.CreatedTime.ToString();
-            }
-            if (string.IsNullOrEmpty(todo.CompletedTime))
-            {
-                todo.CompletedTime = "Not completed yet.";
-            }
+            var res = _todoService.CreateTodo(todo);
+            return Ok(res);
 
-            if (string.IsNullOrEmpty(todo.IsCompleted))
-            {
-                todo.IsCompleted = "0";
-            }
 
-            try
-            {
-                var res = db.Post(todo);
-                return Ok(res);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
         }
 
 
@@ -135,23 +109,9 @@ namespace WebApi3.Controllers
         {
             try
             {
-                // Set completed time
-                if(updatedTodo.IsCompleted == "1"){
-                    updatedTodo.CompletedTime = Convert.ToString(DateTime.Now);
-                }
-                else{
-                    updatedTodo.CompletedTime = "Not completed yet.";
-                }
 
-                var existingTodo = db.Get(id);
-                if (existingTodo == null)
-                {
-                    return NotFound($"Todo with ID {id} not found.");
-                }
-
-                db.Update(id, updatedTodo);
-                var updatedItem = db.Get(id); // Fetch the updated todo item from the database
-                return Ok(updatedItem); // Return the updated todo item as JSON
+                var res = _todoService.UpdateTodo(id, updatedTodo);
+                return Ok(res);
             }
             catch (Exception ex)
             {
@@ -164,14 +124,8 @@ namespace WebApi3.Controllers
         {
             try
             {
-                var existingTodo = db.Get(id);
-                if (existingTodo == null)
-                {
-                    return NotFound($"Todo with ID {id} not found.");
-                }
-
-                db.Delete(id);
-                return Ok(existingTodo);
+                var res = _todoService.DeleteTodo(id);
+                return Ok(res);
             }
             catch (Exception ex)
             {

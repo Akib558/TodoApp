@@ -1,33 +1,12 @@
-<form>
-	<div class="login-container">
-		<div class="login-content">
-			<mat-toolbar class="login-toolbar" color="primary">Recipe Book</mat-toolbar>
-			<mat-card>
-				<form
- >
-					<mat-form-field>
-						<mat-icon matPrefix>person_outline</mat-icon>
-						<input autofocus type="text" matInput placeholder="Username" formControlName="email">
-					</mat-form-field>
+<form #form="ngForm" (ngSubmit)="addUser()" class="form-container">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Username</label>
+      <input type="text" class="form-control" name="title" id="title" [(ngModel)]="usr.username">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="text" class="form-control" name="description" id="description" [(ngModel)]="usr.password">
+    </div>
 
-					<mat-form-field>
-						<mat-icon matPrefix>lock_outline</mat-icon>
-						<input type="password" autocomplete="false" matInput placeholder="Password"  formControlName="password">
-					</mat-form-field>
-
-					<button type="submit" mat-raised-button color="primary">LOGIN</button>
-        </form>
-					<mat-toolbar class="login-toolbar" style="background-color:white">login with</mat-toolbar>
-					<div class="socialMediaFlex">
-						<button mat-fab color="primary"><i class="fab fa-facebook-f"></i></button>
-						<button mat-fab color="accent"><i class="fab fa-google"></i></button>
-					</div>
-          <br>
-          <span> If You don't have a account yet please <a routerLink ='/register'>REGISTER HERE</a></span>
-
-
-
-
-			</mat-card>
-		</div>
-	</div>
+    <button type="submit" class="btn btn-success">Login</button>
+  </form>

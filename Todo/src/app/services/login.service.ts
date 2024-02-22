@@ -14,7 +14,7 @@ export class LoginService {
   constructor(private http: HttpClient) {}
 
 
-  // getUser(usr: LoginModel) : Observable<LoginModel> {
-  //   return this.http.get<LoginModel>(`${this.baseApiUrl}/api/todoall/register`, usr);
-  // }
+  getUser(usr: LoginModel) : Observable<LoginModel> {
+    return this.http.post<LoginModel>(`${this.baseApiUrl}/api/todoall/login`, usr);
+  }
 }
