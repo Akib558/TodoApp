@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { LoginModel } from 'src/app/models/login.model';
 import { loginResponse } from 'src/app/models/loginResponse.model';
 import { LoginService } from 'src/app/services/login.service';
+// import { authService } from 'src/app/services/auth.service';}
 
 @Component({
   selector: 'app-register',
@@ -31,13 +32,17 @@ export class LoginComponent implements OnInit  {
     message: ''
   }
 
+
   ngOnInit(): void {
-    if(this.response.status === 'Success'){
-      this.router.navigate(['/']);
-    }
-    else{
-      this.router.navigate(['login']);
-    }
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (event.url === '/login' || event.url === '/register') {
+          if (LoginService.isLoggedIn(id) == 1) {
+            this.router.navigateByUrl('/home');
+          }
+        }
+      }
+    });
   }
 
 
@@ -75,3 +80,5 @@ export class LoginComponent implements OnInit  {
   }
 
 }
+
+

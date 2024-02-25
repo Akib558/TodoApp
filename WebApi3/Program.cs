@@ -28,6 +28,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -43,6 +44,11 @@ app.UseCors(policy =>
 
 app.UseAuthorization();
 
-app.MapControllers();
+// app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();

@@ -1,38 +1,27 @@
 // auth.service.ts
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
-
-  constructor() { }
-
-  login(username: string, password: string): boolean {
-    // In a real application, you would send an HTTP request to a server to authenticate the user
-    // For simplicity, we'll hardcode the credentials here
-    if (username === 'admin' && password === 'password') {
-      // Store the username in local storage to simulate session persistence
-      localStorage.setItem('username', username);
-      return true;
-    } else {
-      return false;
-    }
+export class authService {
+  static isLoggedIn(arg0: number) {
+    throw new Error('Method not implemented.');
   }
 
-  register(username: string, password: string): boolean {
-    // In a real application, you would send an HTTP request to a server to register the user
-    // For simplicity, we'll just return true here
-    return true;
+  apiUrl: string = "http://localhost:5202";
+
+  constructor(private http: HttpClient) { }
+
+
+
+  logout(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/auth`, {});
   }
 
-  logout(): void {
-    // Clear the username from local storage to simulate logout
-    localStorage.removeItem('username');
-  }
-
-  isLoggedIn(): boolean {
-    // Check if the username is present in local storage to simulate session persistence
-    return !!localStorage.getItem('username');
+  isLoggedIn(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/api/auth/${id}`, );
   }
 }
