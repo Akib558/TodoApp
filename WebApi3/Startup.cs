@@ -6,7 +6,7 @@ using WebApi3.Repositories.Implementations;
 using WebApi3.Repositories.Interfaces;
 // using WebApi3.Services.Implementations;
 using WebApi3.Services.Interfaces;
-using WebApi3.Services.implementations;
+// using WebApi3.Services.implementations;
 
 namespace WebApi3
 {
@@ -14,12 +14,6 @@ namespace WebApi3
     {
         public void ConfigureServices(IServiceCollection services)
         {
-
-
-            // services.AddScoped<ITodoRepository>(provider => new TodoRepository());
-            services.AddScoped<ITodoService, TodoService>();
-            services.AddScoped<ITodoRepository, TodoRepository>(); // Example registration, adjust as needed
-
             services.AddControllers();
         }
 

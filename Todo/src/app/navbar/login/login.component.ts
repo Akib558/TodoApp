@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoginModel } from 'src/app/models/login.model';
+import { loginResponse } from 'src/app/models/loginResponse.model';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -7,17 +9,37 @@ import { LoginService } from 'src/app/services/login.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit  {
+  // router: any;
 
 
 
-  constructor(private loginService: LoginService){
+
+  constructor(private loginService: LoginService, private router: Router){
   }
 
   usr: LoginModel = {
     username: '',
     password: '',
   }
+
+  response: loginResponse = {
+    status: '',
+    data : {
+      user_id: 0,
+    },
+    message: ''
+  }
+
+  ngOnInit(): void {
+    if(this.response.status === 'Success'){
+      this.router.navigate(['/']);
+    }
+    else{
+      this.router.navigate(['login']);
+    }
+  }
+
 
   addUser() {
     // console.log(this.usr);
@@ -32,11 +54,19 @@ export class LoginComponent {
     // })
 
     this.loginService.getUser(this.usr).subscribe({
-      next: (usr) => {
-        console.log(usr);
-        // this.usr.email = '';
-        this.usr.password = '';
-        this.usr.username = '';
+      next: (response) => {
+        console.log(response);
+        if(response.status === 'Success') {
+          this.response.status = response.status;
+          this.response.data.user_id = response.data.user_id;
+          this.response.message = response.message;
+          this.router.navigate(['/']);
+        }
+        else{
+          this.router.navigate(['login']);
+        }
+
+
       },
       error: (err) => {
         console.log(err);

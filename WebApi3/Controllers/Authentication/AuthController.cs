@@ -8,7 +8,7 @@ namespace WebApi3.Controllers.Sessions
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SessionsController : ControllerBase
+    public class AuthController : ControllerBase
     {
         
     }

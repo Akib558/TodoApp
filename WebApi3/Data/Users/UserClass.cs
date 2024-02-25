@@ -92,7 +92,9 @@ namespace WebApi3.Models.Users
                         {
                             Status = "Success",
                             Message = "Login successful",
-                            Data = null
+                            Data = new LoginResponse{
+                                user_id = Convert.ToInt16(reader["user_id"])
+                            }
                         };
                     }
                     else
